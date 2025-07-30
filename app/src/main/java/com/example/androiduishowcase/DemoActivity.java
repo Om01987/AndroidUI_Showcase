@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -18,6 +19,9 @@ import java.util.ArrayList;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+
+
+import com.google.android.material.appbar.AppBarLayout;
 
 public class DemoActivity extends AppCompatActivity {
 
@@ -648,9 +652,475 @@ public class DemoActivity extends AppCompatActivity {
             space.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 50));
             demoContentLayout.addView(space);
+        }   else if ("View".equals(elementName)) {
+            demoDescription.setText("View is the base class for all UI components. Here is a simple colored view.");
+            View simpleView = new View(this);
+            simpleView.setBackgroundColor(Color.parseColor("#FFBB86FC"));  // purple
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 150);
+            params.setMargins(24, 24, 24, 24);
+            simpleView.setLayoutParams(params);
+            demoContentLayout.addView(simpleView);
+
+        } else if ("WebView".equals(elementName)) {
+            demoDescription.setText("WebView displays web pages inside your app.");
+            android.webkit.WebView webView = new android.webkit.WebView(this);
+            int heightInDp = 300;
+            float scale = getResources().getDisplayMetrics().density;
+            int heightInPx = (int) (heightInDp * scale + 0.5f);
+            LinearLayout.LayoutParams webViewParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    heightInPx);
+            webView.setLayoutParams(webViewParams);
+            webView.loadUrl("https://www.example.com");
+            demoContentLayout.addView(webView);
+
+        } else if ("VideoView".equals(elementName)) {
+            demoDescription.setText("VideoView plays video files or streams.");
+            android.widget.VideoView videoView = new android.widget.VideoView(this);
+            LinearLayout.LayoutParams videoParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 300);
+            videoParams.setMargins(24, 24, 24, 24);
+            videoView.setLayoutParams(videoParams);
+            // For demo: You'd need to set video URI or resource here
+            demoContentLayout.addView(videoView);
+
+        } else if ("CalendarView".equals(elementName)) {
+            demoDescription.setText("CalendarView shows a calendar widget for selecting dates.");
+            android.widget.CalendarView calendarView = new android.widget.CalendarView(this);
+            demoContentLayout.addView(calendarView);
+
+        } else if ("TextClock".equals(elementName)) {
+            demoDescription.setText("TextClock displays the current time formatted.");
+            android.widget.TextClock textClock = new android.widget.TextClock(this);
+            textClock.setTextSize(24);
+            demoContentLayout.addView(textClock);
+
+        } else if ("ProgressBar".equals(elementName)) {
+            demoDescription.setText("ProgressBar shows progress of an operation.");
+            android.widget.ProgressBar progressBar = new android.widget.ProgressBar(this);
+            demoContentLayout.addView(progressBar);
+
+        } else if ("ProgressBar (Horizontal)".equals(elementName)) {
+            demoDescription.setText("Horizontal ProgressBar shows progress as a horizontal bar.");
+            android.widget.ProgressBar horizontalProgressBar = new android.widget.ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 48);
+            params.setMargins(24, 24, 24, 24);
+            horizontalProgressBar.setLayoutParams(params);
+            horizontalProgressBar.setProgress(50);  // Example 50% progress
+            demoContentLayout.addView(horizontalProgressBar);
+
+        } else if ("SeekBar".equals(elementName)) {
+            demoDescription.setText("SeekBar allows users to select a value by sliding a thumb.");
+            android.widget.SeekBar seekBar = new android.widget.SeekBar(this);
+            demoContentLayout.addView(seekBar);
+
+        } else if ("SeekBar (Discrete)".equals(elementName)) {
+            demoDescription.setText("Discrete SeekBar with fixed step increments.");
+            android.widget.SeekBar seekBarDiscrete = new android.widget.SeekBar(this);
+            seekBarDiscrete.setMax(10);
+            seekBarDiscrete.setKeyProgressIncrement(1);
+            demoContentLayout.addView(seekBarDiscrete);
+
+        } else if ("RatingBar".equals(elementName)) {
+            demoDescription.setText("RatingBar lets users give a star rating.");
+            android.widget.RatingBar ratingBar = new android.widget.RatingBar(this);
+            demoContentLayout.addView(ratingBar);
+
+        } else if ("SearchView".equals(elementName)) {
+            demoDescription.setText("SearchView provides a UI for search queries.");
+            android.widget.SearchView searchView = new android.widget.SearchView(this);
+            searchView.setQueryHint("Search here...");
+            demoContentLayout.addView(searchView);
+
+        } else if ("TextureView".equals(elementName)) {
+            demoDescription.setText("TextureView displays content streams like videos or camera preview.");
+            // Placeholder: Usually requires complex setup, show a placeholder
+            TextView placeholder = new TextView(this);
+            placeholder.setText("TextureView demo placeholder");
+            placeholder.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(placeholder);
+
+        } else if ("SurfaceView".equals(elementName)) {
+            demoDescription.setText("SurfaceView is used for high-performance drawing.");
+            // Placeholder: Typically requires native drawing, show a placeholder
+            TextView placeholder = new TextView(this);
+            placeholder.setText("SurfaceView demo placeholder");
+            placeholder.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(placeholder);
+
+        } else if ("Horizontal Divider".equals(elementName)) {
+            demoDescription.setText("A horizontal divider is a thin line separating views.");
+            View divider = new View(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 2);
+            params.setMargins(24, 24, 24, 24);
+            divider.setLayoutParams(params);
+            divider.setBackgroundColor(Color.LTGRAY);
+            demoContentLayout.addView(divider);
+
+        } else if ("Vertical Divider".equals(elementName)) {
+            demoDescription.setText("A vertical divider is a thin line used to separate items horizontally.");
+            LinearLayout horizontalLayout = new LinearLayout(this);
+            horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+            horizontalLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 200)); // fixed height
+
+            View leftView = new View(this);
+            leftView.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+            leftView.setBackgroundColor(Color.parseColor("#FFCDD2"));
+
+            View divider = new View(this);
+            LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(2, LinearLayout.LayoutParams.MATCH_PARENT);
+            dividerParams.setMargins(12, 0, 12, 0);
+            divider.setLayoutParams(dividerParams);
+            divider.setBackgroundColor(Color.LTGRAY);
+
+            View rightView = new View(this);
+            rightView.setLayoutParams(new LinearLayout.LayoutParams(
+                    0, LinearLayout.LayoutParams.MATCH_PARENT, 1f));
+            rightView.setBackgroundColor(Color.parseColor("#BBDEFB"));
+
+            horizontalLayout.addView(leftView);
+            horizontalLayout.addView(divider);
+            horizontalLayout.addView(rightView);
+
+            demoContentLayout.addView(horizontalLayout);
+        }   else if ("Spinner".equals(elementName)) {
+            demoDescription.setText("Spinner provides a dropdown menu to select an option.");
+
+            android.widget.Spinner spinner = new android.widget.Spinner(this);
+            String[] options = {"Option 1", "Option 2", "Option 3"};
+            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this,
+                    android.R.layout.simple_spinner_dropdown_item, options);
+            spinner.setAdapter(adapter);
+            demoContentLayout.addView(spinner);
+
+        } else if ("HorizontalScrollView".equals(elementName)) {
+            demoDescription.setText("HorizontalScrollView allows scrolling content horizontally.");
+
+            android.widget.HorizontalScrollView hsv = new android.widget.HorizontalScrollView(this);
+            LinearLayout linearLayout = new LinearLayout(this);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+            linearLayout.setPadding(24, 24, 24, 24);
+
+            for (int i = 1; i <= 10; i++) {
+                Button button = new Button(this);
+                button.setText("Btn " + i);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(8, 0, 8, 0);
+                button.setLayoutParams(params);
+                linearLayout.addView(button);
+            }
+            hsv.addView(linearLayout);
+            demoContentLayout.addView(hsv);
+
+        } else if ("NestedScrollView".equals(elementName)) {
+            demoDescription.setText("NestedScrollView is a ScrollView that supports nested scrolling.");
+
+            androidx.core.widget.NestedScrollView nestedScrollView = new androidx.core.widget.NestedScrollView(this);
+            nestedScrollView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 300));
+            TextView textView = new TextView(this);
+            textView.setPadding(24, 24, 24, 24);
+            StringBuilder longText = new StringBuilder();
+            for (int i = 1; i <= 30; i++) {
+                longText.append("Line ").append(i).append("\n");
+            }
+            textView.setText(longText.toString());
+            nestedScrollView.addView(textView);
+            demoContentLayout.addView(nestedScrollView);
+
+        } else if ("ViewPager2".equals(elementName)) {
+            demoDescription.setText("ViewPager2 allows horizontal paging through pages of content.");
+
+            androidx.viewpager2.widget.ViewPager2 viewPager2 = new androidx.viewpager2.widget.ViewPager2(this);
+            viewPager2.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 300));
+
+            java.util.List<String> pages = java.util.Arrays.asList("Page 1", "Page 2", "Page 3");
+            androidx.recyclerview.widget.RecyclerView.Adapter adapter = new androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
+                @Override
+                public androidx.recyclerview.widget.RecyclerView.ViewHolder onCreateViewHolder(android.view.ViewGroup parent, int viewType) {
+                    TextView tv = new TextView(parent.getContext());
+                    tv.setTextSize(24);
+                    tv.setGravity(Gravity.CENTER);
+                    tv.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT));
+                    return new androidx.recyclerview.widget.RecyclerView.ViewHolder(tv) {};
+                }
+
+                @Override
+                public void onBindViewHolder(androidx.recyclerview.widget.RecyclerView.ViewHolder holder, int position) {
+                    ((TextView) holder.itemView).setText(pages.get(position));
+                }
+
+                @Override
+                public int getItemCount() {
+                    return pages.size();
+                }
+            };
+
+            viewPager2.setAdapter(adapter);
+            demoContentLayout.addView(viewPager2);
+
+        } else if ("CardView".equals(elementName)) {
+            demoDescription.setText("CardView provides a card-like container with rounded corners and shadow.");
+
+            com.google.android.material.card.MaterialCardView cardView = new com.google.android.material.card.MaterialCardView(this);
+            cardView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 200));
+            cardView.setRadius(16f);
+            cardView.setCardElevation(8f);
+            cardView.setContentPadding(24, 24, 24, 24);
+
+            TextView cardText = new TextView(this);
+            cardText.setText("This is a CardView");
+            cardText.setTextSize(18);
+            cardView.addView(cardText);
+
+            demoContentLayout.addView(cardView);
+
+        } else if ("AppBarLayout".equals(elementName)) {
+            demoDescription.setText("AppBarLayout is a vertical layout for app bars.");
+
+            com.google.android.material.appbar.AppBarLayout appBarLayout = new com.google.android.material.appbar.AppBarLayout(this);
+            appBarLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 200));
+            appBarLayout.setBackgroundColor(Color.parseColor("#6200EE"));
+
+            TextView appBarText = new TextView(this);
+            appBarText.setText("AppBarLayout (purple bar)");
+            appBarText.setTextColor(Color.WHITE);
+            appBarText.setTextSize(20);
+            appBarText.setGravity(Gravity.CENTER);
+            appBarText.setLayoutParams(new AppBarLayout.LayoutParams(
+                    AppBarLayout.LayoutParams.MATCH_PARENT, AppBarLayout.LayoutParams.MATCH_PARENT));
+
+            appBarLayout.addView(appBarText);
+            demoContentLayout.addView(appBarLayout);
+
+        } else if ("BottomAppBar".equals(elementName)) {
+            demoDescription.setText("BottomAppBar provides a bar at the bottom of the screen.");
+
+            com.google.android.material.bottomappbar.BottomAppBar bottomAppBar = new com.google.android.material.bottomappbar.BottomAppBar(this);
+            bottomAppBar.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 100));
+
+            demoContentLayout.addView(bottomAppBar);
+
+        } else if ("NavigationView".equals(elementName)) {
+            demoDescription.setText("NavigationView provides a standard navigation drawer menu.");
+
+            com.google.android.material.navigation.NavigationView navigationView = new com.google.android.material.navigation.NavigationView(this);
+            navigationView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 400));
+
+            // For demo, add menu programmatically or mock here (usually use XML menus)
+            // Here just add a placeholder TextView
+            TextView navText = new TextView(this);
+            navText.setText("NavigationView Demo Placeholder");
+            navText.setGravity(Gravity.CENTER);
+            navText.setTextSize(18);
+            navigationView.addView(navText);
+
+            demoContentLayout.addView(navigationView);
+
+        } else if ("BottomNavigationView".equals(elementName)) {
+            demoDescription.setText("BottomNavigationView provides bottom navigation bar.");
+
+            com.google.android.material.bottomnavigation.BottomNavigationView bottomNavigationView = new com.google.android.material.bottomnavigation.BottomNavigationView(this);
+            bottomNavigationView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            // Setup menu programmatically or ignore for demo
+            // For demo, add a TextView child
+            TextView bottomNavText = new TextView(this);
+            bottomNavText.setText("BottomNavigationView Demo");
+            bottomNavText.setGravity(Gravity.CENTER);
+            bottomNavText.setTextSize(18);
+            bottomNavigationView.addView(bottomNavText);
+
+            demoContentLayout.addView(bottomNavigationView);
+
+        } else if ("Toolbar".equals(elementName) || "MaterialToolbar".equals(elementName)) {
+            demoDescription.setText("Toolbar is a customizable action bar.");
+
+            androidx.appcompat.widget.Toolbar toolbar = new androidx.appcompat.widget.Toolbar(this);
+            toolbar.setTitle("Demo Toolbar");
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBackgroundColor(Color.parseColor("#6200EE"));
+            toolbar.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT));
+            demoContentLayout.addView(toolbar);
+
+        } else if ("TabLayout".equals(elementName)) {
+            demoDescription.setText("TabLayout shows horizontal tabs for switching views.");
+
+            com.google.android.material.tabs.TabLayout tabLayout = new com.google.android.material.tabs.TabLayout(this);
+            tabLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
+            tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
+
+            demoContentLayout.addView(tabLayout);
+
+        } else if ("TabItem".equals(elementName)) {
+            demoDescription.setText("TabItem defines a tab inside TabLayout.");
+
+            TextView info = new TextView(this);
+            info.setText("TabItem is typically used in XML with TabLayout and does not have runtime UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("ViewStub".equals(elementName)) {
+            demoDescription.setText("ViewStub is a lightweight invisible view that can be inflated later.");
+
+            TextView info = new TextView(this);
+            info.setText("ViewStub demo placeholder - works by inflating it programmatically.");
+            info.setPadding(24, 24, 24, 24);
+
+            demoContentLayout.addView(info);
+
+        } else if ("ViewAnimator".equals(elementName)) {
+            demoDescription.setText("ViewAnimator switches between child views with animations.");
+
+            android.widget.ViewAnimator viewAnimator = new android.widget.ViewAnimator(this);
+            viewAnimator.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 200));
+
+            TextView firstView = new TextView(this);
+            firstView.setText("View 1");
+            firstView.setGravity(Gravity.CENTER);
+            firstView.setTextSize(20);
+            firstView.setBackgroundColor(Color.parseColor("#AED581"));
+
+            TextView secondView = new TextView(this);
+            secondView.setText("View 2");
+            secondView.setGravity(Gravity.CENTER);
+            secondView.setTextSize(20);
+            secondView.setBackgroundColor(Color.parseColor("#81D4FA"));
+
+            viewAnimator.addView(firstView);
+            viewAnimator.addView(secondView);
+
+            demoContentLayout.addView(viewAnimator);
+
+        } else if ("ViewSwitcher".equals(elementName)) {
+            demoDescription.setText("ViewSwitcher is a specialized ViewAnimator with two child views.");
+
+            android.widget.ViewSwitcher viewSwitcher = new android.widget.ViewSwitcher(this);
+            viewSwitcher.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 200));
+
+            Button btn1 = new Button(this);
+            btn1.setText("View 1");
+            btn1.setOnClickListener(v -> viewSwitcher.showNext());
+
+            Button btn2 = new Button(this);
+            btn2.setText("View 2");
+            btn2.setOnClickListener(v -> viewSwitcher.showPrevious());
+
+            viewSwitcher.addView(btn1);
+            viewSwitcher.addView(btn2);
+
+            demoContentLayout.addView(viewSwitcher);
+
+        } else if ("<include>".equals(elementName) || "<view>".equals(elementName)
+                || "<requestFocus>".equals(elementName)) {
+            demoDescription.setText(elementName + " is an XML tag generally used for layout inclusion or focus control, no direct UI demo.");
+            TextView info = new TextView(this);
+            info.setText(elementName + " does not have an explicit UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("NavHostFragment".equals(elementName)) {
+            demoDescription.setText("NavHostFragment hosts navigation graphs for navigation components.");
+            TextView info = new TextView(this);
+            info.setText("NavHostFragment demo placeholder - used in navigation architecture.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+        }   else if ("Group".equals(elementName)) {
+            demoDescription.setText("Group is a helper object to apply visibility and transformations on multiple views.");
+            TextView info = new TextView(this);
+            info.setText("Group is non-visual; no direct UI representation.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Barrier (Horizontal)".equals(elementName)) {
+            demoDescription.setText("Horizontal Barrier places constraints dynamically based on referenced views horizontally.");
+            TextView info = new TextView(this);
+            info.setText("Barrier is a helper for ConstraintLayout; not visible on UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Barrier (Vertical)".equals(elementName)) {
+            demoDescription.setText("Vertical Barrier places constraints dynamically based on referenced views vertically.");
+            TextView info = new TextView(this);
+            info.setText("Barrier is a helper for ConstraintLayout; not visible on UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Flow".equals(elementName)) {
+            demoDescription.setText("Flow helper positions views in a flow, wrapping content like a flexbox.");
+            TextView info = new TextView(this);
+            info.setText("Flow helper in ConstraintLayout is not a visual view.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Guideline (Horizontal)".equals(elementName)) {
+            demoDescription.setText("Horizontal Guideline is an invisible line to help align views in ConstraintLayout.");
+            TextView info = new TextView(this);
+            info.setText("Guidelines are invisible helpers, no direct UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Guideline (Vertical)".equals(elementName)) {
+            demoDescription.setText("Vertical Guideline is an invisible line for alignment in ConstraintLayout.");
+            TextView info = new TextView(this);
+            info.setText("Guidelines are invisible helpers, no UI elements.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("Layer".equals(elementName)) {
+            demoDescription.setText("Layer groups multiple views and applies transformations as a single entity.");
+            TextView info = new TextView(this);
+            info.setText("Layer is a helper, invisible in UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+
+        } else if ("ImageFilterView".equals(elementName)) {
+            demoDescription.setText("ImageFilterView is a helper for advanced image filters. Demo uses ImageView + color filter.");
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(R.drawable.ic_img); // your image resource
+            imageView.setColorFilter(android.graphics.Color.argb(128, 255, 0, 0)); // red filter
+            imageView.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
+            demoContentLayout.addView(imageView);
         }
-
-
+        else if ("ImageFilterButton".equals(elementName)) {
+            demoDescription.setText("ImageFilterButton is an advanced helper. Demo uses ImageButton + color filter.");
+            ImageButton imageButton = new ImageButton(this);
+            imageButton.setImageResource(R.drawable.ic_buttons); // your image resource
+            imageButton.setColorFilter(android.graphics.Color.argb(128, 0, 0, 255)); // blue filter
+            imageButton.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            imageButton.setLayoutParams(new LinearLayout.LayoutParams(150, 150));
+            imageButton.setOnClickListener(v -> Toast.makeText(this, "ImageButton clicked", Toast.LENGTH_SHORT).show());
+            demoContentLayout.addView(imageButton);
+        }
+        else if ("MockView".equals(elementName)) {
+            demoDescription.setText("MockView is used for design-time placeholders and holds no runtime UI.");
+            TextView info = new TextView(this);
+            info.setText("MockView is only visible in the layout editor, no runtime UI.");
+            info.setPadding(24, 24, 24, 24);
+            demoContentLayout.addView(info);
+        }
         else {
             demoDescription.setText("Demo not available yet for this UI element.");
             TextView noDemoText = new TextView(this);
