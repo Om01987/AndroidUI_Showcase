@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/demo_root"
@@ -25,12 +24,21 @@
         android:textSize="16sp"
         android:textColor="?android:textColorSecondary" />
 
-    <!--
-        You can add demo UI views below, or replace this layout dynamically in code.
-        For example:
-        - Add a Button to demo a button
-        - Add a TextView with custom styling to demo TextView
-        - etc.
-    -->
+    <ScrollView
+        android:id="@+id/demoScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:layout_marginTop="16dp">
+
+        <LinearLayout
+            android:id="@+id/demoContentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal" />
+
+    </ScrollView>
 
 </LinearLayout>
