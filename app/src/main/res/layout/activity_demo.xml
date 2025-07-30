@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/demo_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/demoTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Demo Title"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:id="@+id/demoDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Demo description or placeholder text."
+        android:textSize="16sp"
+        android:textColor="?android:textColorSecondary" />
+
+    <!--
+        You can add demo UI views below, or replace this layout dynamically in code.
+        For example:
+        - Add a Button to demo a button
+        - Add a TextView with custom styling to demo TextView
+        - etc.
+    -->
+
+</LinearLayout>
