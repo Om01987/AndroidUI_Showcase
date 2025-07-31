@@ -6,6 +6,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,10 +18,7 @@ import android.widget.Toast;
 import java.util.List;
 import java.util.ArrayList;
 
-
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import com.google.android.material.appbar.AppBarLayout;
 
 public class DemoActivity extends AppCompatActivity {
@@ -1120,6 +1118,108 @@ public class DemoActivity extends AppCompatActivity {
             info.setText("MockView is only visible in the layout editor, no runtime UI.");
             info.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(info);
+        }   else if ("GridLayout".equals(elementName)) {
+            demoDescription.setText("GridLayout arranges components in a grid-like structure.");
+
+            android.widget.GridLayout gridLayout = new android.widget.GridLayout(this);
+            gridLayout.setColumnCount(3);
+            gridLayout.setRowCount(3);
+            gridLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            gridLayout.setPadding(16,16,16,16);
+
+            for (int i = 1; i <= 9; i++) {
+                Button button = new Button(this);
+                button.setText("Btn " + i);
+                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                params.width = 0;
+                params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
+                button.setLayoutParams(params);
+                gridLayout.addView(button);
+            }
+            demoContentLayout.addView(gridLayout);
+
+        } else if ("ListView".equals(elementName)) {
+            demoDescription.setText("ListView shows a vertical scrolling list of items.");
+
+            android.widget.ListView listView = new android.widget.ListView(this);
+            listView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 400));
+
+            String[] items = {"Item 1", "Item 2", "Item 3", "Item 4", "Item 5"};
+            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, items);
+            listView.setAdapter(adapter);
+
+            demoContentLayout.addView(listView);
+
+//        } else if ("TabHost".equals(elementName)) {
+//            demoDescription.setText("TabHost manages multiple tabbed views.");
+//
+//            android.widget.TabHost tabHost = new android.widget.TabHost(this);
+//            tabHost.setLayoutParams(new LinearLayout.LayoutParams(
+//                    LinearLayout.LayoutParams.MATCH_PARENT, 400));
+//            tabHost.setup();
+//
+//            android.widget.TabHost.TabSpec spec1 = tabHost.newTabSpec("Tab 1");
+//            spec1.setIndicator("Tab 1");
+//            spec1.setContent(android.R.id.tabcontent);
+//            tabHost.addTab(spec1);
+//
+//            android.widget.TabHost.TabSpec spec2 = tabHost.newTabSpec("Tab 2");
+//            spec2.setIndicator("Tab 2");
+//            spec2.setContent(android.R.id.tabcontent);
+//            tabHost.addTab(spec2);
+//
+//            demoContentLayout.addView(tabHost);
+//
+        } else if ("RelativeLayout".equals(elementName)) {
+            demoDescription.setText("RelativeLayout positions child views relative to each other or parent.");
+
+            android.widget.RelativeLayout relativeLayout = new android.widget.RelativeLayout(this);
+            relativeLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 300));
+
+            TextView tv1 = new TextView(this);
+            tv1.setId(View.generateViewId());
+            tv1.setText("Top Left");
+            tv1.setBackgroundColor(Color.parseColor("#FFCDD2"));  // light red
+            android.widget.RelativeLayout.LayoutParams lp1 = new android.widget.RelativeLayout.LayoutParams(
+                    android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp1.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
+            lp1.addRule(android.widget.RelativeLayout.ALIGN_PARENT_START);
+            tv1.setLayoutParams(lp1);
+            relativeLayout.addView(tv1);
+
+            TextView tv2 = new TextView(this);
+            tv2.setText("Bottom Right");
+            tv2.setBackgroundColor(Color.parseColor("#C8E6C9"));  // light green
+            android.widget.RelativeLayout.LayoutParams lp2 = new android.widget.RelativeLayout.LayoutParams(
+                    android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    android.widget.RelativeLayout.LayoutParams.WRAP_CONTENT);
+            lp2.addRule(android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM);
+            lp2.addRule(android.widget.RelativeLayout.ALIGN_PARENT_END);
+            tv2.setLayoutParams(lp2);
+            relativeLayout.addView(tv2);
+
+            demoContentLayout.addView(relativeLayout);
+
+        } else if ("GridView".equals(elementName)) {
+            demoDescription.setText("GridView shows items in a scrollable grid.");
+
+            android.widget.GridView gridView = new android.widget.GridView(this);
+            gridView.setNumColumns(3);
+            gridView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, 400));
+
+            String[] items = {"A", "B", "C", "D", "E", "F", "G", "H", "I"};
+            android.widget.ArrayAdapter<String> adapter = new android.widget.ArrayAdapter<>(this,
+                    android.R.layout.simple_list_item_1, items);
+            gridView.setAdapter(adapter);
+
+            demoContentLayout.addView(gridView);
         }
         else {
             demoDescription.setText("Demo not available yet for this UI element.");
