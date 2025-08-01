@@ -1,7 +1,16 @@
 package com.example.androiduishowcase;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,30 +61,124 @@ public class DemoActivity extends AppCompatActivity {
 
         // Dynamically create demo widgets for "Common" category elements
         if ("TextView".equals(elementName)) {
-            demoDescription.setText("A TextView displays read-only text to the user. It's one of the most commonly used Android views.");
-            TextView textViewDemo = new TextView(this);
-            textViewDemo.setText("This is a sample TextView");
-            textViewDemo.setTextSize(20);
-            textViewDemo.setTextColor(Color.rgb(33, 150, 243));  // Material Blue 500
-            textViewDemo.setPadding(24, 24, 24, 24);
-            textViewDemo.setGravity(Gravity.CENTER);
-            demoContentLayout.addView(textViewDemo);
+            demoDescription.setText("A TextView displays read-only text. This demo shows advanced features and runtime property changes.");
 
-        } else if ("Button".equals(elementName)) {
-            demoDescription.setText("A Button can be pressed or clicked by the user to perform an action.");
+            LinearLayout container = new LinearLayout(this);
+            container.setOrientation(LinearLayout.VERTICAL);
+            container.setPadding(16, 16, 16, 16);
+
+            // Basic TextView
+            TextView basicTextView = new TextView(this);
+            basicTextView.setText("This is a basic TextView");
+            basicTextView.setTextSize(20);
+            basicTextView.setTextColor(Color.rgb(33, 150, 243)); // Material Blue 500
+            basicTextView.setPadding(24, 24, 24, 24);
+            basicTextView.setGravity(Gravity.CENTER);
+            container.addView(basicTextView);
+
+            // Styled TextView - Bold and Italic
+            TextView styledTextView = new TextView(this);
+            styledTextView.setText("This TextView is bold and italic");
+            styledTextView.setTypeface(Typeface.create("sans-serif", Typeface.BOLD_ITALIC));
+            styledTextView.setTextSize(18);
+            styledTextView.setPadding(24, 24, 24, 24);
+            container.addView(styledTextView);
+
+            // Ellipsize with maxLines
+            TextView ellipsizeTextView = new TextView(this);
+            ellipsizeTextView.setText("This is an example of text that is too long and will be truncated at the end with ellipsis (...) after max 2 lines.");
+            ellipsizeTextView.setMaxLines(2);
+            ellipsizeTextView.setEllipsize(TextUtils.TruncateAt.END);
+            ellipsizeTextView.setPadding(24, 24, 24, 24);
+            container.addView(ellipsizeTextView);
+
+            // Marquee TextView
+            TextView marqueeTextView = new TextView(this);
+            marqueeTextView.setText("This is marquee scrolling text example. It will scroll continuously.");
+            marqueeTextView.setSingleLine(true);
+            marqueeTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+            marqueeTextView.setMarqueeRepeatLimit(-1); // infinite
+            marqueeTextView.setSelected(true); // necessary for marquee to start
+            marqueeTextView.setPadding(24, 24, 24, 24);
+            container.addView(marqueeTextView);
+
+            // Spannable text with clickable span
+            TextView spannableTextView = new TextView(this);
+            SpannableString spannable = new SpannableString("Click here to learn more!");
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    Toast.makeText(DemoActivity.this, "Clicked on 'here'!", Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void updateDrawState(TextPaint ds) {
+                    super.updateDrawState(ds);
+                    ds.setColor(Color.RED);
+                    ds.setUnderlineText(true);
+                }
+            };
+            spannable.setSpan(clickableSpan, 6, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spannableTextView.setText(spannable);
+            spannableTextView.setMovementMethod(LinkMovementMethod.getInstance());
+            spannableTextView.setPadding(24, 24, 24, 24);
+            container.addView(spannableTextView);
+
+            // Button to increase text size of basicTextView
+            Button increaseSizeBtn = new Button(this);
+            increaseSizeBtn.setText("Increase Basic Text Size");
+            increaseSizeBtn.setOnClickListener(v -> {
+                float currentSize = basicTextView.getTextSize() / getResources().getDisplayMetrics().scaledDensity;
+                basicTextView.setTextSize(currentSize + 2);
+            });
+            container.addView(increaseSizeBtn);
+
+            demoContentLayout.addView(container);
+        }
+        else if ("Button".equals(elementName)) {
+            demoDescription.setText("A basic Button demo with a clickable Toast and simple styling.");
+
             Button buttonDemo = new Button(this);
             buttonDemo.setText("Click Me!");
             buttonDemo.setOnClickListener(v -> Toast.makeText(this, "Button clicked!", Toast.LENGTH_SHORT).show());
+
+            // Simple rounded corners background
+            GradientDrawable roundedBg = new GradientDrawable();
+            roundedBg.setColor(Color.parseColor("#6200EE"));  // Purple color
+            roundedBg.setCornerRadius(20);
+            buttonDemo.setBackground(roundedBg);
+            buttonDemo.setTextColor(Color.WHITE);
+            buttonDemo.setAllCaps(false);
+            buttonDemo.setPadding(24, 16, 24, 16);
+
             demoContentLayout.addView(buttonDemo);
+        }
+        else if ("ImageView".equals(elementName)) {
+            demoDescription.setText("An ImageView that shows the complete image, preserving aspect ratio, without cropping.");
 
-        } else if ("ImageView".equals(elementName)) {
-            demoDescription.setText("An ImageView displays images or icons.");
             ImageView imageViewDemo = new ImageView(this);
-            imageViewDemo.setImageResource(R.drawable.ic_img);
-            imageViewDemo.setPadding(24, 24, 24, 24);
-            demoContentLayout.addView(imageViewDemo);
+            imageViewDemo.setImageResource(R.drawable.ic_img1);
 
-        } else if ("RecyclerView".equals(elementName)) {
+            int heightInDp = 280;
+            float scale = getResources().getDisplayMetrics().density;
+            int heightInPx = (int) (heightInDp * scale + 0.5f);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    heightInPx);
+            params.setMargins(32, 32, 32, 32);
+            imageViewDemo.setLayoutParams(params);
+
+            // Show the whole image (no cropping), centered with aspect ratio preserved
+            imageViewDemo.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            // Optional: Subtle background and zero padding
+            imageViewDemo.setBackgroundColor(Color.parseColor("#F0F0F0"));
+            imageViewDemo.setPadding(0, 0, 0, 0);
+
+            demoContentLayout.addView(imageViewDemo);
+        }
+
+        else if ("RecyclerView".equals(elementName)) {
             demoDescription.setText("RecyclerView efficiently displays a large set of data by recycling views.");
 
             androidx.recyclerview.widget.RecyclerView recyclerViewDemo = new androidx.recyclerview.widget.RecyclerView(this);
@@ -137,7 +240,8 @@ public class DemoActivity extends AppCompatActivity {
 
 
 
-    } else if ("FragmentContainerView".equals(elementName)) {
+    }
+        else if ("FragmentContainerView".equals(elementName)) {
             demoDescription.setText("FragmentContainerView hosts a Fragment within a layout.");
 
             // Add FragmentContainerView dynamically
@@ -163,7 +267,8 @@ public class DemoActivity extends AppCompatActivity {
 
 
 
-    } else if ("ScrollView".equals(elementName)) {
+    }
+        else if ("ScrollView".equals(elementName)) {
             demoDescription.setText("ScrollView allows scrolling of contents that don't fit the screen.");
 
             ScrollView scrollViewDemo = new ScrollView(this);
@@ -189,7 +294,8 @@ public class DemoActivity extends AppCompatActivity {
             demoContentLayout.addView(scrollViewDemo);
 
 
-    } else if ("Switch".equals(elementName)) {
+    }
+        else if ("Switch".equals(elementName)) {
             demoDescription.setText("A Switch is a two-state toggle switch widget.");
             Switch switchDemo = new Switch(this);
             switchDemo.setText("Toggle me");
@@ -198,7 +304,8 @@ public class DemoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Switch is " + (isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(switchDemo);
 
-        } else if ("TextView".equals(elementName)) {
+        }
+        else if ("TextView".equals(elementName)) {
             demoDescription.setText("A TextView displays static text.");
             TextView textViewDemo = new TextView(this);
             textViewDemo.setText("This is a TextView.");
@@ -206,7 +313,8 @@ public class DemoActivity extends AppCompatActivity {
             textViewDemo.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(textViewDemo);
 
-        } else if ("Plain Text".equals(elementName)) {
+        }
+        else if ("Plain Text".equals(elementName)) {
             demoDescription.setText("Plain Text input allows the user to enter regular text.");
             android.widget.EditText editText = new android.widget.EditText(this);
             editText.setHint("Enter plain text here");
@@ -214,27 +322,34 @@ public class DemoActivity extends AppCompatActivity {
             editText.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(editText);
 
-        } else if ("Password".equals(elementName)) {
+        }
+        else if ("Password".equals(elementName)) {
             demoDescription.setText("Password input hides characters for privacy.");
             android.widget.EditText passwordInput = new android.widget.EditText(this);
             passwordInput.setHint("Enter password");
             passwordInput.setInputType(android.text.InputType.TYPE_CLASS_TEXT |
                     android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            // Explicitly mask input characters
+            passwordInput.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
             passwordInput.setSingleLine(true);
             passwordInput.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(passwordInput);
 
-        } else if ("Password (Numeric)".equals(elementName)) {
+        }
+        else if ("Password (Numeric)".equals(elementName)) {
             demoDescription.setText("Numeric Password input, suitable for PINs.");
             android.widget.EditText numericPassword = new android.widget.EditText(this);
             numericPassword.setHint("Enter numeric password");
             numericPassword.setInputType(android.text.InputType.TYPE_CLASS_NUMBER |
                     android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+            // Mask numeric password input explicitly
+            numericPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
             numericPassword.setSingleLine(true);
             numericPassword.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(numericPassword);
 
-        } else if ("E-mail".equals(elementName)) {
+        }
+        else if ("E-mail".equals(elementName)) {
             demoDescription.setText("E-mail input optimized for email addresses.");
             android.widget.EditText emailInput = new android.widget.EditText(this);
             emailInput.setHint("Enter email");
@@ -244,7 +359,20 @@ public class DemoActivity extends AppCompatActivity {
             emailInput.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(emailInput);
 
-        } else if ("Phone".equals(elementName)) {
+            // Add a Validate Email button below the input
+            Button validateEmailBtn = new Button(this);
+            validateEmailBtn.setText("Validate Email");
+            validateEmailBtn.setOnClickListener(v -> {
+                String email = emailInput.getText().toString().trim();
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    Toast.makeText(this, "Valid Email Address!", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Invalid Email Address!", Toast.LENGTH_SHORT).show();
+                }
+            });
+            demoContentLayout.addView(validateEmailBtn);
+        }
+        else if ("Phone".equals(elementName)) {
             demoDescription.setText("Phone input optimized for phone numbers.");
             android.widget.EditText phoneInput = new android.widget.EditText(this);
             phoneInput.setHint("Enter phone number");
@@ -253,7 +381,8 @@ public class DemoActivity extends AppCompatActivity {
             phoneInput.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(phoneInput);
 
-        } else if ("Postal Address".equals(elementName)) {
+        }
+        else if ("Postal Address".equals(elementName)) {
             demoDescription.setText("Input field optimized for postal addresses.");
             android.widget.EditText postalAddress = new android.widget.EditText(this);
             postalAddress.setHint("Enter postal address");
@@ -263,7 +392,8 @@ public class DemoActivity extends AppCompatActivity {
             postalAddress.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(postalAddress);
 
-        } else if ("Multiline Text".equals(elementName)) {
+        }
+        else if ("Multiline Text".equals(elementName)) {
             demoDescription.setText("Multiline text input with multiple lines.");
             android.widget.EditText multilineText = new android.widget.EditText(this);
             multilineText.setHint("Enter multiline text");
@@ -272,7 +402,8 @@ public class DemoActivity extends AppCompatActivity {
             multilineText.setMinLines(3);
             multilineText.setPadding(24, 24, 24, 24);
             demoContentLayout.addView(multilineText);
-        }   else if ("Time".equals(elementName)) {
+        }
+        else if ("Time".equals(elementName)) {
             demoDescription.setText("Time input lets users pick a specific time (uses TimePickerDialog).");
             Button timeButton = new Button(this);
             timeButton.setText("Pick a time");
@@ -286,7 +417,8 @@ public class DemoActivity extends AppCompatActivity {
             });
             demoContentLayout.addView(timeButton);
 
-        } else if ("Date".equals(elementName)) {
+        }
+        else if ("Date".equals(elementName)) {
             demoDescription.setText("Date input lets users pick a calendar date (uses DatePickerDialog).");
             Button dateButton = new Button(this);
             dateButton.setText("Pick a date");
@@ -301,7 +433,8 @@ public class DemoActivity extends AppCompatActivity {
             });
             demoContentLayout.addView(dateButton);
 
-        } else if ("Number".equals(elementName)) {
+        }
+        else if ("Number".equals(elementName)) {
             demoDescription.setText("Enter a standard numeric value.");
             android.widget.EditText numberInput = new android.widget.EditText(this);
             numberInput.setHint("Enter number");
@@ -310,7 +443,8 @@ public class DemoActivity extends AppCompatActivity {
             numberInput.setPadding(24,24,24,24);
             demoContentLayout.addView(numberInput);
 
-        } else if ("Number (Signed)".equals(elementName)) {
+        }
+        else if ("Number (Signed)".equals(elementName)) {
             demoDescription.setText("Enter a signed (positive or negative) number.");
             android.widget.EditText numberSigned = new android.widget.EditText(this);
             numberSigned.setHint("Enter signed number");
@@ -319,7 +453,8 @@ public class DemoActivity extends AppCompatActivity {
             numberSigned.setPadding(24,24,24,24);
             demoContentLayout.addView(numberSigned);
 
-        } else if ("Number (Decimal)".equals(elementName)) {
+        }
+        else if ("Number (Decimal)".equals(elementName)) {
             demoDescription.setText("Enter a decimal (floating point) number.");
             android.widget.EditText numberDecimal = new android.widget.EditText(this);
             numberDecimal.setHint("Enter decimal number");
@@ -328,7 +463,8 @@ public class DemoActivity extends AppCompatActivity {
             numberDecimal.setPadding(24,24,24,24);
             demoContentLayout.addView(numberDecimal);
 
-        } else if ("AutoCompleteTextView".equals(elementName)) {
+        }
+        else if ("AutoCompleteTextView".equals(elementName)) {
             demoDescription.setText("AutoCompleteTextView offers suggestions from a list as you type.");
             android.widget.AutoCompleteTextView autoComplete = new android.widget.AutoCompleteTextView(this);
             String[] items = {"Apple", "Banana", "Cherry", "Date", "Dragonfruit", "Grape"};
@@ -338,7 +474,8 @@ public class DemoActivity extends AppCompatActivity {
             autoComplete.setPadding(24,24,24,24);
             demoContentLayout.addView(autoComplete);
 
-        } else if ("MultiAutoCompleteText ...".equals(elementName) || "MultiAutoCompleteTextView".equals(elementName)) {
+        }
+        else if ("MultiAutoCompleteText ...".equals(elementName) || "MultiAutoCompleteTextView".equals(elementName)) {
             demoDescription.setText("MultiAutoCompleteTextView suggests and allows multiple entries, separated by commas.");
             android.widget.MultiAutoCompleteTextView multiAuto = new android.widget.MultiAutoCompleteTextView(this);
             String[] items = {"Red", "Green", "Blue", "Yellow", "Orange", "Purple"};
@@ -349,7 +486,8 @@ public class DemoActivity extends AppCompatActivity {
             multiAuto.setPadding(24,24,24,24);
             demoContentLayout.addView(multiAuto);
 
-        } else if ("CheckedTextView".equals(elementName)) {
+        }
+        else if ("CheckedTextView".equals(elementName)) {
             demoDescription.setText("A CheckedTextView acts as a text label with a checkbox. Tap to toggle.");
             android.widget.CheckedTextView checkedTextView = new android.widget.CheckedTextView(this);
             checkedTextView.setText("CheckedTextView label (tap me)");
@@ -364,7 +502,8 @@ public class DemoActivity extends AppCompatActivity {
             });
             demoContentLayout.addView(checkedTextView);
 
-        } else if ("TextInputLayout".equals(elementName)) {
+        }
+        else if ("TextInputLayout".equals(elementName)) {
             demoDescription.setText("TextInputLayout is a Material Design wrapper for EditText with floating hint and error support.");
             // Requires dependency: implementation 'com.google.android.material:material:1.4.0' or later
             com.google.android.material.textfield.TextInputLayout textInputLayout = new com.google.android.material.textfield.TextInputLayout(this);
@@ -373,7 +512,8 @@ public class DemoActivity extends AppCompatActivity {
             editText.setPadding(24,24,24,24);
             textInputLayout.addView(editText);
             demoContentLayout.addView(textInputLayout);
-        } else if ("Button".equals(elementName)) {
+        }
+        else if ("Button".equals(elementName)) {
             demoDescription.setText("A standard push-button widget.");
 
             Button btnDemo = new Button(this);
@@ -381,7 +521,8 @@ public class DemoActivity extends AppCompatActivity {
             btnDemo.setOnClickListener(v -> Toast.makeText(this, "Button clicked!", Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(btnDemo);
 
-        } else if ("ImageButton".equals(elementName)) {
+        }
+        else if ("ImageButton".equals(elementName)) {
             demoDescription.setText("A button with an image instead of text.");
 
             android.widget.ImageButton imgBtn = new android.widget.ImageButton(this);
@@ -389,8 +530,8 @@ public class DemoActivity extends AppCompatActivity {
             imgBtn.setBackgroundColor(Color.TRANSPARENT);
             imgBtn.setOnClickListener(v -> Toast.makeText(this, "ImageButton clicked!", Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(imgBtn);
-
-        } else if ("ChipGroup".equals(elementName)) {
+        }
+        else if ("ChipGroup".equals(elementName)) {
             demoDescription.setText("ChipGroup holds multiple Chip components.");
 
             com.google.android.material.chip.ChipGroup chipGroup = new com.google.android.material.chip.ChipGroup(this);
@@ -408,7 +549,8 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(chipGroup);
 
-        } else if ("Chip".equals(elementName)) {
+        }
+        else if ("Chip".equals(elementName)) {
             demoDescription.setText("A compact element that represents an input, attribute, or action.");
 
             com.google.android.material.chip.Chip chip = new com.google.android.material.chip.Chip(this);
@@ -416,7 +558,8 @@ public class DemoActivity extends AppCompatActivity {
             chip.setCheckable(true);
             demoContentLayout.addView(chip);
 
-        } else if ("CheckBox".equals(elementName)) {
+        }
+        else if ("CheckBox".equals(elementName)) {
             demoDescription.setText("A checkbox allows the user to select or deselect a boolean option.");
 
             android.widget.CheckBox checkBox = new android.widget.CheckBox(this);
@@ -425,7 +568,8 @@ public class DemoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Checkbox is " + (isChecked ? "checked" : "unchecked"), Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(checkBox);
 
-        } else if ("RadioGroup".equals(elementName)) {
+        }
+        else if ("RadioGroup".equals(elementName)) {
             demoDescription.setText("RadioGroup contains multiple RadioButton elements allowing single selection.");
 
             android.widget.RadioGroup radioGroup = new android.widget.RadioGroup(this);
@@ -445,7 +589,8 @@ public class DemoActivity extends AppCompatActivity {
             });
             demoContentLayout.addView(radioGroup);
 
-        } else if ("RadioButton".equals(elementName)) {
+        }
+        else if ("RadioButton".equals(elementName)) {
             demoDescription.setText("A single radio button allowing users to select one option.");
 
             android.widget.RadioButton radioButton = new android.widget.RadioButton(this);
@@ -454,7 +599,8 @@ public class DemoActivity extends AppCompatActivity {
                     Toast.makeText(this, "RadioButton clicked", Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(radioButton);
 
-        } else if ("ToggleButton".equals(elementName)) {
+        }
+        else if ("ToggleButton".equals(elementName)) {
             demoDescription.setText("ToggleButton switches between two states: checked and unchecked.");
 
             android.widget.ToggleButton toggleButton = new android.widget.ToggleButton(this);
@@ -465,7 +611,8 @@ public class DemoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Toggle is " + (isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(toggleButton);
 
-        } else if ("Switch".equals(elementName)) {
+        }
+        else if ("Switch".equals(elementName)) {
             demoDescription.setText("Switch is a two-state toggle switch widget (already implemented previously).");
 
             android.widget.Switch switchDemo = new android.widget.Switch(this);
@@ -474,7 +621,8 @@ public class DemoActivity extends AppCompatActivity {
                     Toast.makeText(this, "Switch is " + (isChecked ? "ON" : "OFF"), Toast.LENGTH_SHORT).show());
             demoContentLayout.addView(switchDemo);
 
-        } else if ("FloatingActionButton".equals(elementName)) {
+        }
+        else if ("FloatingActionButton".equals(elementName)) {
             demoDescription.setText("FloatingActionButton represents a primary action in your app.");
 
             com.google.android.material.floatingactionbutton.FloatingActionButton fab = new com.google.android.material.floatingactionbutton.FloatingActionButton(this);
@@ -490,7 +638,8 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(fab);
 
-        }   else if ("ConstraintLayout".equals(elementName)) {
+        }
+        else if ("ConstraintLayout".equals(elementName)) {
             demoDescription.setText("ConstraintLayout allows flexible and flat layout hierarchies by constraining views.");
 
             androidx.constraintlayout.widget.ConstraintLayout constraintLayoutDemo = new androidx.constraintlayout.widget.ConstraintLayout(this);
@@ -526,7 +675,8 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(constraintLayoutDemo);
 
-        } else if ("LinearLayout (horizontal)".equals(elementName)) {
+        }
+        else if ("LinearLayout (horizontal)".equals(elementName)) {
             demoDescription.setText("LinearLayout arranges its children horizontally when orientation is set to horizontal.");
 
             LinearLayout linearLayoutH = new LinearLayout(this);
@@ -546,7 +696,8 @@ public class DemoActivity extends AppCompatActivity {
             }
             demoContentLayout.addView(linearLayoutH);
 
-        } else if ("LinearLayout (vertical)".equals(elementName)) {
+        }
+        else if ("LinearLayout (vertical)".equals(elementName)) {
             demoDescription.setText("LinearLayout arranges its children vertically when orientation is set to vertical.");
 
             LinearLayout linearLayoutV = new LinearLayout(this);
@@ -570,7 +721,8 @@ public class DemoActivity extends AppCompatActivity {
             }
             demoContentLayout.addView(linearLayoutV);
 
-        } else if ("FrameLayout".equals(elementName)) {
+        }
+        else if ("FrameLayout".equals(elementName)) {
             demoDescription.setText("FrameLayout displays child views stacked on top of each other.");
 
             android.widget.FrameLayout frameLayout = new android.widget.FrameLayout(this);
@@ -595,7 +747,8 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(frameLayout);
 
-        } else if ("TableLayout".equals(elementName)) {
+        }
+        else if ("TableLayout".equals(elementName)) {
             demoDescription.setText("TableLayout arranges its children in rows and columns, like an HTML table.");
 
             android.widget.TableLayout tableLayout = new android.widget.TableLayout(this);
@@ -620,7 +773,8 @@ public class DemoActivity extends AppCompatActivity {
             }
             demoContentLayout.addView(tableLayout);
 
-        } else if ("TableRow".equals(elementName)) {
+        }
+        else if ("TableRow".equals(elementName)) {
             demoDescription.setText("TableRow represents a single row inside a TableLayout.");
 
             android.widget.TableLayout tableLayout = new android.widget.TableLayout(this);
@@ -643,14 +797,16 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(tableLayout);
 
-        } else if ("Space".equals(elementName)) {
+        }
+        else if ("Space".equals(elementName)) {
             demoDescription.setText("Space creates an empty spacer view that can be used to arrange components.");
 
             android.widget.Space space = new android.widget.Space(this);
             space.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT, 50));
             demoContentLayout.addView(space);
-        }   else if ("View".equals(elementName)) {
+        }
+        else if ("View".equals(elementName)) {
             demoDescription.setText("View is the base class for all UI components. Here is a simple colored view.");
             View simpleView = new View(this);
             simpleView.setBackgroundColor(Color.parseColor("#FFBB86FC"));  // purple
@@ -660,7 +816,8 @@ public class DemoActivity extends AppCompatActivity {
             simpleView.setLayoutParams(params);
             demoContentLayout.addView(simpleView);
 
-        } else if ("WebView".equals(elementName)) {
+        }
+        else if ("WebView".equals(elementName)) {
             demoDescription.setText("WebView displays web pages inside your app.");
             android.webkit.WebView webView = new android.webkit.WebView(this);
             int heightInDp = 300;
@@ -670,31 +827,55 @@ public class DemoActivity extends AppCompatActivity {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     heightInPx);
             webView.setLayoutParams(webViewParams);
-            webView.loadUrl("https://www.example.com");
+            webView.loadUrl("https://www.google.com");
             demoContentLayout.addView(webView);
 
-        } else if ("VideoView".equals(elementName)) {
-            demoDescription.setText("VideoView plays video files or streams.");
+        }
+        else if ("VideoView".equals(elementName)) {
+            demoDescription.setText("VideoView plays a local video file from resources.");
+
             android.widget.VideoView videoView = new android.widget.VideoView(this);
+
+            // Convert 300dp to pixels for height
+            int heightInDp = 300;
+            float scale = getResources().getDisplayMetrics().density;
+            int heightInPx = (int) (heightInDp * scale + 0.5f);
+
             LinearLayout.LayoutParams videoParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT, 300);
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    heightInPx);
             videoParams.setMargins(24, 24, 24, 24);
             videoView.setLayoutParams(videoParams);
-            // For demo: You'd need to set video URI or resource here
-            demoContentLayout.addView(videoView);
 
-        } else if ("CalendarView".equals(elementName)) {
+            // Set local video URI from res/raw/my_video.mp4
+            Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.my_video);
+            videoView.setVideoURI(videoUri);
+
+            // Add MediaController for playback controls
+            android.widget.MediaController mediaController = new android.widget.MediaController(this);
+            mediaController.setAnchorView(videoView);
+            videoView.setMediaController(mediaController);
+
+            // Start playback when the video is ready
+            videoView.setOnPreparedListener(mp -> videoView.start());
+
+            demoContentLayout.addView(videoView);
+        }
+
+        else if ("CalendarView".equals(elementName)) {
             demoDescription.setText("CalendarView shows a calendar widget for selecting dates.");
             android.widget.CalendarView calendarView = new android.widget.CalendarView(this);
             demoContentLayout.addView(calendarView);
 
-        } else if ("TextClock".equals(elementName)) {
+        }
+        else if ("TextClock".equals(elementName)) {
             demoDescription.setText("TextClock displays the current time formatted.");
             android.widget.TextClock textClock = new android.widget.TextClock(this);
             textClock.setTextSize(24);
             demoContentLayout.addView(textClock);
 
-        } else if ("ProgressBar".equals(elementName)) {
+        }
+        else if ("ProgressBar".equals(elementName)) {
             demoDescription.setText("ProgressBar shows progress of an operation.");
             android.widget.ProgressBar progressBar = new android.widget.ProgressBar(this);
             demoContentLayout.addView(progressBar);
@@ -832,7 +1013,8 @@ public class DemoActivity extends AppCompatActivity {
             nestedScrollView.addView(textView);
             demoContentLayout.addView(nestedScrollView);
 
-        } else if ("ViewPager2".equals(elementName)) {
+        }
+        else if ("ViewPager2".equals(elementName)) {
             demoDescription.setText("ViewPager2 allows horizontal paging through pages of content.");
 
             androidx.viewpager2.widget.ViewPager2 viewPager2 = new androidx.viewpager2.widget.ViewPager2(this);
@@ -866,7 +1048,8 @@ public class DemoActivity extends AppCompatActivity {
             viewPager2.setAdapter(adapter);
             demoContentLayout.addView(viewPager2);
 
-        } else if ("CardView".equals(elementName)) {
+        }
+        else if ("CardView".equals(elementName)) {
             demoDescription.setText("CardView provides a card-like container with rounded corners and shadow.");
 
             com.google.android.material.card.MaterialCardView cardView = new com.google.android.material.card.MaterialCardView(this);
@@ -883,7 +1066,8 @@ public class DemoActivity extends AppCompatActivity {
 
             demoContentLayout.addView(cardView);
 
-        } else if ("AppBarLayout".equals(elementName)) {
+        }
+        else if ("AppBarLayout".equals(elementName)) {
             demoDescription.setText("AppBarLayout is a vertical layout for app bars.");
 
             com.google.android.material.appbar.AppBarLayout appBarLayout = new com.google.android.material.appbar.AppBarLayout(this);
@@ -902,7 +1086,8 @@ public class DemoActivity extends AppCompatActivity {
             appBarLayout.addView(appBarText);
             demoContentLayout.addView(appBarLayout);
 
-        } else if ("BottomAppBar".equals(elementName)) {
+        }
+        else if ("BottomAppBar".equals(elementName)) {
             demoDescription.setText("BottomAppBar provides a bar at the bottom of the screen.");
 
             com.google.android.material.bottomappbar.BottomAppBar bottomAppBar = new com.google.android.material.bottomappbar.BottomAppBar(this);
